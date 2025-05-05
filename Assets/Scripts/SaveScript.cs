@@ -31,6 +31,9 @@ public class SaveScript : MonoBehaviour
     public static int zombiesInGame = 0;
     public static bool generatorOn = false;
     public static GameObject generator;
+    public static bool gotVaccine = false;
+    public static GameObject vaccine;
+
 
     private GameObject[] zombies;
 

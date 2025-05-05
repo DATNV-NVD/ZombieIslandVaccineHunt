@@ -31,6 +31,7 @@ public class ItemsInventory : MonoBehaviour
     private bool nightvisionRefill = false;
 
     public GameObject electricDoorObj;
+    public GameObject electricLight1, electricLight2, electricLight3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,6 +42,9 @@ public class ItemsInventory : MonoBehaviour
         title.text = titles[0];
         description.text = descriptions[0];
         useButton.SetActive(false);
+        electricLight1.SetActive(false);
+        electricLight2.SetActive(false);
+        electricLight3.SetActive(false);
     }
 
     private void OnEnable()
@@ -238,6 +242,9 @@ public class ItemsInventory : MonoBehaviour
                 SaveScript.generator.GetComponent<AudioSource>().Play();
                 
                 electricDoorObj.GetComponent<DoorType>().locked = false;
+                electricLight1.SetActive(true);
+                electricLight2.SetActive(true);
+                electricLight3.SetActive(true);
             }
         }
     }

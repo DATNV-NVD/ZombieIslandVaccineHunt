@@ -28,6 +28,7 @@ public class PickupsScript : MonoBehaviour
 
     public GameObject doorMessageObj;
     public GameObject generatorMassageObj;
+    public GameObject vaccineMassageObj;
     public Text doorMessage;
     public AudioClip[] pickupSounds;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,6 +38,7 @@ public class PickupsScript : MonoBehaviour
         audioPlayer = GetComponent<AudioSource>();
         doorMessageObj.SetActive(false);
         generatorMassageObj.SetActive(false);
+        vaccineMassageObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -149,7 +151,7 @@ public class PickupsScript : MonoBehaviour
                         
                     }
                 }
-                else if (hit.transform.gameObject.CompareTag("generator"))
+                else if (hit.transform.gameObject.CompareTag("Generator"))
                 {
                     SaveScript.generator = hit.transform.gameObject;
                     if(SaveScript.generatorOn == false)
@@ -161,6 +163,12 @@ public class PickupsScript : MonoBehaviour
                         generatorMassageObj.SetActive(false);
                     }
                 }
+
+                else if (hit.transform.gameObject.CompareTag("Vaccine"))
+                {
+                    SaveScript.vaccine = hit.transform.gameObject;
+                    vaccineMassageObj.SetActive(true);
+                }
             }
             else
             {
@@ -170,6 +178,9 @@ public class PickupsScript : MonoBehaviour
 
                 generatorMassageObj.SetActive(false);
                 SaveScript.generator = null;
+
+                vaccineMassageObj.SetActive(false);
+                SaveScript.vaccine = null;
             }
         }
 

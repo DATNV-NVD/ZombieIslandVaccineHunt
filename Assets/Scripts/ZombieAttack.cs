@@ -6,7 +6,7 @@ public class ZombieAttack : MonoBehaviour
 {
     private bool canDamage = false;
     private Collider col;
-    private Animator bloodEffect;
+    public Animator bloodEffect;
     public int damageAmt = 3;
     private AudioSource hitSound;
 
