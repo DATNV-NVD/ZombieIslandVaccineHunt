@@ -44,96 +44,99 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animInfo = anim.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.IsTag("BottleThrown"))
+        if (Time.timeScale == 1)
         {
-            canAttack = false;
-        }
-        else
-        {
-            canAttack = true;
-        }
-        if (SaveScript.weaponID != currentWeaponID)
-        {
-            ChangeWeapons();
-        }
-
-        if (Input.GetMouseButtonDown(0) && canAttack == true)
-        {
-            if (SaveScript.inventoryOpen == false)
+            animInfo = anim.GetCurrentAnimatorStateInfo(0);
+            if (animInfo.IsTag("BottleThrown"))
             {
-                if (SaveScript.currentAmmo[SaveScript.weaponID] > 0 && SaveScript.stamina > 20)
-                {
-                    anim.SetTrigger("Attack");
-                    audioPlayer.clip = weaponSounds[SaveScript.weaponID];
-                    audioPlayer.Play();
+                canAttack = false;
+            }
+            else
+            {
+                canAttack = true;
+            }
+            if (SaveScript.weaponID != currentWeaponID)
+            {
+                ChangeWeapons();
+            }
 
-                    if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
+            if (Input.GetMouseButtonDown(0) && canAttack == true)
+            {
+                if (SaveScript.inventoryOpen == false)
+                {
+                    if (SaveScript.currentAmmo[SaveScript.weaponID] > 0 && SaveScript.stamina > 20)
                     {
-                        SaveScript.currentAmmo[SaveScript.weaponID]--;
-                        SaveScript.gunUsed = true;
+                        anim.SetTrigger("Attack");
+                        audioPlayer.clip = weaponSounds[SaveScript.weaponID];
+                        audioPlayer.Play();
+
+                        if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
+                        {
+                            SaveScript.currentAmmo[SaveScript.weaponID]--;
+                            SaveScript.gunUsed = true;
+                        }
+                    }
+                    else
+                    {
+                        if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
+                        {
+                            audioPlayer.clip = weaponSounds[9];
+                            audioPlayer.Play();
+                        }
                     }
                 }
-                else
+            }
+            if (Input.GetMouseButton(0) && sprayPanel.GetComponent<SprayScripts>().sprayAmount > 0.0f)
+            {
+                sprayEmpty = false;
+                stopSpray = false;
+                if (SaveScript.weaponID == 6 && SaveScript.inventoryOpen == false)
                 {
-                    if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
+                    if (spraySoundOn == false)
                     {
-                        audioPlayer.clip = weaponSounds[9];
+                        spraySoundOn = true;
+                        anim.SetTrigger("Attack");
+                        StartCoroutine(StartSpraySound());
+
+                    }
+                }
+            }
+            if (Input.GetMouseButtonUp(0) || sprayPanel.GetComponent<SprayScripts>().sprayAmount <= 0.0f)
+            {
+
+                if (SaveScript.weaponID == 6 && SaveScript.inventoryOpen == false && stopSpray == false)
+                {
+                    stopSpray = true;
+                    anim.SetTrigger("Release");
+                    spraySoundOn = false;
+                    audioPlayer.Stop();
+                    audioPlayer.loop = false;
+                }
+            }
+            if (sprayPanel.GetComponent<SprayScripts>().sprayAmount <= 0.0f && sprayEmpty == false)
+            {
+                sprayEmpty = true;
+                SaveScript.weaponAmts[6]--;
+                if (SaveScript.weaponAmts[6] == 0)
+                {
+                    SaveScript.weaponsPickedUp[6] = false;
+                }
+            }
+
+
+            if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    if (SaveScript.ammoAmts[SaveScript.weaponID - 4] > 0)
+                    {
+
+                        SaveScript.currentAmmo[SaveScript.weaponID] += SaveScript.ammoAmts[SaveScript.weaponID - 4];
+                        SaveScript.ammoAmts[SaveScript.weaponID - 4] = 0;
+                        anim.SetTrigger("Reload");
+                        audioPlayer.clip = reloadSounds[SaveScript.weaponID - 4];
                         audioPlayer.Play();
                     }
-                }
-            }
-        }
-        if (Input.GetMouseButton(0) && sprayPanel.GetComponent<SprayScripts>().sprayAmount > 0.0f)
-        {
-            sprayEmpty = false;
-            stopSpray = false;
-            if (SaveScript.weaponID == 6 && SaveScript.inventoryOpen == false)
-            {
-                if (spraySoundOn == false)
-                {
-                    spraySoundOn = true;
-                    anim.SetTrigger("Attack");
-                    StartCoroutine(StartSpraySound());
-
-                }
-            }
-        }
-        if (Input.GetMouseButtonUp(0) || sprayPanel.GetComponent<SprayScripts>().sprayAmount <= 0.0f)
-        {
-
-            if (SaveScript.weaponID == 6 && SaveScript.inventoryOpen == false && stopSpray == false)
-            {
-                stopSpray = true;
-                anim.SetTrigger("Release");
-                spraySoundOn = false;
-                audioPlayer.Stop();
-                audioPlayer.loop = false;
-            }
-        }
-        if (sprayPanel.GetComponent<SprayScripts>().sprayAmount <= 0.0f && sprayEmpty == false)
-        {
-            sprayEmpty = true;
-            SaveScript.weaponAmts[6]--;
-            if (SaveScript.weaponAmts[6] == 0)
-            {
-                SaveScript.weaponsPickedUp[6] = false;
-            }
-        }
-
-
-        if (SaveScript.weaponID == 4 || SaveScript.weaponID == 5)
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (SaveScript.ammoAmts[SaveScript.weaponID - 4] > 0)
-                {
-
-                    SaveScript.currentAmmo[SaveScript.weaponID] += SaveScript.ammoAmts[SaveScript.weaponID - 4];
-                    SaveScript.ammoAmts[SaveScript.weaponID - 4] = 0;
-                    anim.SetTrigger("Reload");
-                    audioPlayer.clip = reloadSounds[SaveScript.weaponID - 4];
-                    audioPlayer.Play();
                 }
             }
         }

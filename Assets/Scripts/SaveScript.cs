@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.SceneManagement;
 
 public class SaveScript : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class SaveScript : MonoBehaviour
 
     private GameObject[] zombies;
 
+    public GameObject zombieMessage, deathMessage;
+    public GameObject fps;
+
 
 
 
@@ -44,6 +48,13 @@ public class SaveScript : MonoBehaviour
     {
         stamina = FirstPersonController.FPSstamina;
         health = 100;
+        infection = 0;
+        inventoryOpen = false;
+        weaponID = 0;
+        itemID = 0;
+        stamina = 100;
+        generatorOn = false;
+        gotVaccine = false;
         weaponsPickedUp[0] = true;
         weaponAmts[0]=1;
         
@@ -63,6 +74,9 @@ public class SaveScript : MonoBehaviour
         currentAmmo[4] = 12;
         currentAmmo[6] = 0;
         
+        zombieMessage.SetActive(false);
+        deathMessage.SetActive(false);
+        fps.SetActive(false);
     }
 
     // Update is called once per frame
@@ -78,12 +92,26 @@ public class SaveScript : MonoBehaviour
             }
         }
 
-        
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
 
         if(zombiesInGame < 0)
         {
             zombiesInGame = 0;
         }
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            fps.SetActive(true);
+        }
+
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            fps.SetActive(false);
+        }
+
         if(FirstPersonController.inventorySwitchedOn == true)
         {
             inventoryOpen = true;
@@ -163,6 +191,25 @@ public class SaveScript : MonoBehaviour
 
         }
     }
+
+    if(health <= 0)
+    {
+        deathMessage.SetActive(true);
+        StartCoroutine(PauseTime());
+        
+    }
+
+    if(infection >= 100)
+    {
+        zombieMessage.SetActive(true);
+        StartCoroutine(PauseTime());
+    }
+    }
+
+    IEnumerator PauseTime()
+    {
+        yield return new WaitForSeconds(1.2f);
+        Time.timeScale = 0;
     }
 
     

@@ -112,7 +112,7 @@ public class LookMode : MonoBehaviour
             FlashLightOff();
         }
 
-        if(SaveScript.inventoryOpen == true)
+        if(SaveScript.inventoryOpen == true || Time.timeScale == 0)
         {
             Cursor.visible = true;
             pointer.SetActive(false);
